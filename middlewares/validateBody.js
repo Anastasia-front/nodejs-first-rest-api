@@ -1,8 +1,9 @@
 const { HttpError } = require("../helpers");
 
-const checkRequiredFields = (name, email, phone) => {
+const checkRequiredFields = (name, email, phone, favorite) => {
   const missingFields = [];
   const nonStringFields = [];
+  const nonBooleanField = [];
 
   if (!name) {
     missingFields.push("name");
@@ -22,7 +23,17 @@ const checkRequiredFields = (name, email, phone) => {
     nonStringFields.push("phone");
   }
 
-  if (missingFields.length === 0 && nonStringFields.length === 0) {
+  if (!favorite) {
+    missingFields.push("favorite");
+  } else if (typeof favorite !== "boolean") {
+    nonBooleanField.push("favorite");
+  }
+
+  if (
+    missingFields.length === 0 &&
+    nonStringFields.length === 0 &&
+    nonBooleanField.length === 0
+  ) {
     return "all required fields are filled";
   }
 
@@ -33,7 +44,11 @@ const checkRequiredFields = (name, email, phone) => {
   }
 
   if (nonStringFields.length > 0) {
-    errorMessage += `  non-string fields - ${nonStringFields.join(", ")}`;
+    errorMessage += `  non-string fields - ${nonStringFields.join(", ")}    /`;
+  }
+
+  if (nonBooleanField.length > 0) {
+    errorMessage += `  non-boolean field - ${nonBooleanField.join(", ")}`;
   }
 
   return errorMessage;
@@ -47,7 +62,8 @@ const validateBody = (schema) => {
       const name = error._original.name;
       const email = error._original.email;
       const phone = error._original.phone;
-      const message = checkRequiredFields(name, email, phone);
+      const favorite = error._original.favorite;
+      const message = checkRequiredFields(name, email, phone, favorite);
       if (error._original) next(HttpError(400, message));
     }
     next();
@@ -56,4 +72,17 @@ const validateBody = (schema) => {
   return func;
 };
 
-module.exports = validateBody;
+const validateFavorite = (schema) => {
+  const func = (req, res, next) => {
+    const { error } = schema.validate(req.body);
+    if (error) {
+      console.log(error);
+      next(HttpError(400, "missing field favorite"));
+    }
+    next();
+  };
+
+  return func;
+};
+
+module.exports = { validateFavorite, validateBody };
