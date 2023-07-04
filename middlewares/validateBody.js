@@ -84,5 +84,34 @@ const validateFavorite = (schema) => {
 
   return func;
 };
+const validateSubscription = (schema) => {
+  const func = (req, res, next) => {
+    const { error } = schema.validate(req.body);
+    if (error) {
+      console.log(error);
+      next(HttpError(400, error.message));
+    }
+    next();
+  };
 
-module.exports = { validateFavorite, validateBody };
+  return func;
+};
+
+const validateAuth = (schema) => {
+  const func = (req, res, next) => {
+    const { error } = schema.validate(req.body);
+    if (error) {
+      next(HttpError(400, "Помилка від Joi або іншої бібліотеки валідації"));
+    }
+    next();
+  };
+
+  return func;
+};
+
+module.exports = {
+  validateFavorite,
+  validateBody,
+  validateAuth,
+  validateSubscription,
+};
