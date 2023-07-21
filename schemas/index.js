@@ -1,14 +1,16 @@
-const addSchema = require("./addInfo");
+const addInfo = require("./addInfo");
 const updateFavorite = require("./updateFavorite");
 const register = require("./register");
 const login = require("./login");
+const email = require("./email");
 const updateSubscription = require("./updateSubscription");
 
 const schema = {
-  addSchema,
-  updateFavorite,
   register,
   login,
+  email,
+  addInfo,
+  updateFavorite,
   updateSubscription,
 };
 

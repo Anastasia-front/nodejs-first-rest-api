@@ -25,7 +25,7 @@ routerContacts.get(
 routerContacts.post(
   "/",
   authenticate,
-  validateBody(schema.addSchema),
+  validateBody(schema.addInfo),
   ctrlContacts.addContact
 );
 
@@ -33,7 +33,7 @@ routerContacts.put(
   "/:id",
   authenticate,
   isValidId,
-  validateBody(schema.addSchema),
+  validateBody(schema.addInfo),
   ctrlContacts.updateContact
 );
 
