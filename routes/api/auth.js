@@ -6,6 +6,7 @@ const {
   validateAuth,
   authenticate,
   validateSubscription,
+  validateEmail,
   upload,
 } = require("../../middlewares");
 
@@ -13,10 +14,16 @@ const schema = require("../../schemas");
 
 const routerAuth = express.Router();
 
-// signup
 routerAuth.post("/register", validateAuth(schema.register), ctrlUser.register);
 
-// signin
+routerAuth.get("/verify/:verificationToken", ctrlUser.verifyEmail);
+
+routerAuth.post(
+  "/verify",
+  validateEmail(schema.email),
+  ctrlUser.resendVerifyEmail
+);
+
 routerAuth.post("/login", validateAuth(schema.login), ctrlUser.login);
 
 routerAuth.get("/current", authenticate, ctrlUser.getCurrent);

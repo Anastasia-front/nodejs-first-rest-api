@@ -4,6 +4,7 @@ const {
   validateFavorite,
   validateAuth,
   validateSubscription,
+  validateEmail,
 } = require("./validateBody");
 const authenticate = require("./authenticate");
 const upload = require("./upload");
@@ -14,6 +15,7 @@ module.exports = {
   validateFavorite,
   authenticate,
   validateAuth,
+  validateEmail,
   validateSubscription,
   upload,
 };
