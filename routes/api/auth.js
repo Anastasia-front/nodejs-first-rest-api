@@ -14,6 +14,21 @@ const schema = require("../../schemas");
 
 const routerAuth = express.Router();
 
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     description: Registration
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Object of user
+ *         schema:
+ *           type: object
+ *           items:
+ *             $ref: '#/models/user'
+ */
 routerAuth.post("/register", validateAuth(schema.register), ctrlUser.register);
 
 routerAuth.get("/verify/:verificationToken", ctrlUser.verifyEmail);
