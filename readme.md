@@ -2,6 +2,8 @@
 
 Щоб перевірити роботу REST API пиши так:
 
+## Базові ендпоінти
+
 ### GET http://localhost:3000/api/contacts
 
 `Відповідь` &mdash; повертається масив всіх контактів в json-форматі зі статусом 200
@@ -30,6 +32,46 @@
 
 Отримує body в json-форматі з оновленням поля favorite (має бути значення boolean)<br>
 `Відповідь` &mdash; якщо в body немає якихось обов'язкових полів або вони не строки, повертається json з ключем {"message":"missing field favorite"} і статусом 400; якщо з body всe добре - повертається оновлений об'єкт контакту зі статусом 200, інакше повертається json з ключем "message": "not found" і статусом 404
+
+## Аутентифікація
+
+### POST http://localhost:3000/users/register
+
+Отримує body в форматі {email, password, subscription} (перші два поля обов'язкові, всі поля мають бути стрінгами, валідація присутня) <br>
+`Відповідь` &mdash; при помилці валідації повертається "Помилка від Joi або іншої бібліотеки валідації" зі статусом 400; якщо пошта вже використовується кимось іншим повертається ResponseBody: {"message": "Email in use"} зі статусом 409; якщо з body все добре повертається об'єкт наступного виду {
+"user": {
+"email": "example@example.com",
+"subscription": "starter"
+}
+} і статусом 201 (поле subscription додається по замовчуванню, якщо його не вказати при реєстрації через налаштування моделі "user" - subscription: {
+type: String,
+enum: ["starter", "pro", "business"],
+default: "starter"
+})
+
+### POST http://localhost:3000/users/login
+
+Отримує body в форматі {email, password} (всі поля обов'язкові та мають бути стрінгами, валідація присутня) <br>
+`Відповідь` &mdash; при помилці валідації повертається "Помилка від Joi або іншої бібліотеки валідації" зі статусом 400; якщо пароль або email невірний повертається ResponseBody: {"message": "Email or password is wrong"} зі статусом 401; якщо з body все добре шукається пароль для користувача в БД, якщо пароль знаходиться створюється токен, зберігається в поточному полі юзера і повертається об'єкт наступного виду ResponseBody: {
+"token": "exampletoken",
+"user": {
+"email": "example@example.com",
+"subscription": "starter"
+}
+} і статусом 200
+
+### POST http://localhost:3000/users/logout
+
+Отримує пусте body з обовʼязковим заголовком Authorization: "Bearer {{token}}" <br>
+`Відповідь` &mdash; якщо користувача у моделі "user" за \_id не існує повертається ResponseBody: {"message": "Not authorized"} і статус 401; в іншому випадку, видаляється токен у поточного юзера і повертається статус 204
+
+### GET http://localhost:3000/users/current
+
+Запит відправляється з обовʼязковим заголовком Authorization: "Bearer {{token}}" <br>
+`Відповідь` &mdash; якщо користувача не існує повертається ResponseBody: {"message": "Not authorized"} і статус 401; в іншому випадку повертається ResponseBody: {
+"email": "example@example.com",
+"subscription": "starter"
+} і статус 200
 
 ### Команди:
 
