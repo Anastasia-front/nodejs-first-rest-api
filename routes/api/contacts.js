@@ -53,7 +53,7 @@ module.exports = routerContacts;
  * @swagger
  * tags:
  *   name: Contacts
- *   description: Endpoints for managing contacts
+ *   description: Endpoints for managing contacts  
  */
 
 /**
@@ -61,7 +61,9 @@ module.exports = routerContacts;
  * /api/contacts:
  *   get:
  *     summary: Get all contacts
- *     description: Returns an array of all contacts in JSON format with status 200
+ *     description: |
+ *       Returns an array of all contacts in JSON format with status 200.
+ *       If the request is successful, it returns an array of users.
  *     produces:
  *       - application/json
  *     responses:
@@ -70,7 +72,17 @@ module.exports = routerContacts;
  *         schema:
  *           type: array
  *           items:
- *             $ref: '#/definitions/User'
+ *             $ref: '#/schemas/addInfo'
+ *         examples:
+ *           application/json:
+ *             - name: John Doe
+ *               email: john.doe@example.com
+ *               phone: +123456789
+ *               favorite: true
+ *             - name: Jane Smith
+ *               email: jane.smith@example.com
+ *               phone: +987654321
+ *               favorite: false
  */
 
 /**
@@ -78,7 +90,9 @@ module.exports = routerContacts;
  * /api/contacts/{id}:
  *   get:
  *     summary: Get a contact by ID
- *     description: Returns a contact object in JSON format with status 200 if the ID exists; otherwise, returns a JSON with key "message": "not found" and status 404
+ *     description: |
+ *             Returns a contact object in JSON format with status 200 if the ID exists;
+ *             otherwise, returns a JSON with key "message": "not found" and status 404
  *     produces:
  *       - application/json
  *     parameters:
@@ -91,7 +105,7 @@ module.exports = routerContacts;
  *       200:
  *         description: A contact object
  *         schema:
- *           $ref: '#/definitions/User'
+ *           $ref: '#/schemas/addInfo'
  *       404:
  *         description: Contact not found
  *         schema:
@@ -127,7 +141,7 @@ module.exports = routerContacts;
  *       201:
  *         description: The newly created contact with a unique identifier (id) in JSON format.
  *         schema:
- *           $ref: '#/definitions/User'
+ *           $ref: '#/schemas/addInfo'
  *       400:
  *         description: Missing required field(s) or non-string field(s) in the request body.
  *         schema:
@@ -138,7 +152,6 @@ module.exports = routerContacts;
  *               example: missing required field(s) / non-string field(s)
  */
 
-// Комментарии для маршрута DELETE /api/contacts/:id
 /**
  * @swagger
  * /api/contacts/{id}:
@@ -172,7 +185,6 @@ module.exports = routerContacts;
  *               example: not found
  */
 
-// Комментарии для маршрута PUT /api/contacts/:id
 /**
  * @swagger
  * /api/contacts/{id}:
@@ -204,7 +216,7 @@ module.exports = routerContacts;
  *       200:
  *         description: The updated contact in JSON format.
  *         schema:
- *           $ref: '#/definitions/User'
+ *           $ref: '#/schemas/addInfo'
  *       404:
  *         description: Contact not found.
  *         schema:
@@ -215,7 +227,6 @@ module.exports = routerContacts;
  *               example: not found
  */
 
-// Комментарии для маршрута PATCH /api/contacts/:id/favorite
 /**
  * @swagger
  * /api/contacts/{id}/favorite:
@@ -243,7 +254,7 @@ module.exports = routerContacts;
  *       200:
  *         description: The updated contact in JSON format.
  *         schema:
- *           $ref: '#/definitions/User'
+ *           $ref: '#/schemas/updateFavorite'
  *       400:
  *         description: Missing field "favorite" in the request body.
  *         schema:

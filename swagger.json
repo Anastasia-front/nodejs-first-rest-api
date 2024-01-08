@@ -3,7 +3,7 @@
   "info": {
     "version": "2.0.2",
     "title": "Node.js - first REST API",
-    "description": "**API documentation <p>**Стек технологій, що використовується у проєкті:** <p>Node.js - середовище виконання JavaScript на сервері. <p>Express.js - фреймворк для розробки веб-додатків на Node.js. <p>MongoDB - NoSQL база даних. <p>Mongoose - бібліотека для роботи з MongoDB у Node.js. ",
+    "description": "**API documentation** <p>Стек технологій, що використовується у проєкті:<p>Node.js - середовище виконання JavaScript на сервері. <p>Express.js - фреймворк для розробки веб-додатків на Node.js. <p>MongoDB - NoSQL база даних. <p>Mongoose - бібліотека для роботи з MongoDB у Node.js. ",
 
     "contact": {
       "name": "Anastasiia",
