@@ -54,75 +54,45 @@ module.exports = routerContacts;
  * tags:
  *   name: Contacts
  *   description: Endpoints for managing contacts  
+ * securityDefinitions:
+ *   BearerAuth:
+ *     type: apiKey
+ *     name: Authorization
+ *     in: header
+ *     description: Enter your Bearer token here
  */
 
 /**
  * @swagger
+ *
  * /api/contacts:
  *   get:
  *     summary: Get all contacts
  *     description: |
  *       Returns an array of all contacts in JSON format with status 200.
- *       If the request is successful, it returns an array of users.
  *     produces:
  *       - application/json
+ *     tags:
+ *       - Contacts
  *     responses:
  *       200:
- *         description: An array of users
- *         schema:
- *           type: array
- *           items:
- *             $ref: '#/schemas/addInfo'
- *         examples:
- *           application/json:
- *             - name: John Doe
- *               email: john.doe@example.com
- *               phone: +123456789
- *               favorite: true
- *             - name: Jane Smith
- *               email: jane.smith@example.com
- *               phone: +987654321
- *               favorite: false
- */
-
-/**
- * @swagger
- * /api/contacts/{id}:
- *   get:
- *     summary: Get a contact by ID
- *     description: |
- *             Returns a contact object in JSON format with status 200 if the ID exists;
- *             otherwise, returns a JSON with key "message": "not found" and status 404
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: id
- *         description: ID of the contact to retrieve
- *         in: path
- *         required: true
- *         type: string
- *     responses:
- *       200:
- *         description: A contact object
- *         schema:
- *           $ref: '#/schemas/addInfo'
- *       404:
- *         description: Contact not found
- *         schema:
- *           type: object
- *           properties:
- *             message:
- *               type: string
- *               example: not found
- */
-/**
- * @swagger
- * /api/contacts:
+ *         description: An array of contacts
+ *       401:
+ *         description: Unauthorized
+ *     security:
+ *       - BearerAuth: []
+ *
  *   post:
  *     summary: Create a new contact
- *     description: Creates a new contact with the provided body in JSON format { name, email, phone } (all fields are required and must be strings).
+ *     description: |
+ *       Creates a new contact.
+ *       Receives body in the format {name, email, phone} (all fields are mandatory and must be strings).
+ *       - If any required fields are missing or non-string fields are present, returns {"message": "missing required field(s) / non-string field(s)"} with status 400.
+ *       - If successful, adds a unique identifier to the contact object and returns the object with the added id {id, name, email, phone} with status 201.
  *     produces:
  *       - application/json
+ *     tags:
+ *       - Contacts
  *     parameters:
  *       - name: body
  *         description: Request body for creating a new contact
@@ -137,29 +107,57 @@ module.exports = routerContacts;
  *               type: string
  *             phone:
  *               type: string
+ *           required:
+ *             - name
+ *             - email
+ *             - phone
  *     responses:
  *       201:
- *         description: The newly created contact with a unique identifier (id) in JSON format.
- *         schema:
- *           $ref: '#/schemas/addInfo'
+ *         description: Contact created successfully
  *       400:
- *         description: Missing required field(s) or non-string field(s) in the request body.
- *         schema:
- *           type: object
- *           properties:
- *             message:
- *               type: string
- *               example: missing required field(s) / non-string field(s)
- */
-
-/**
- * @swagger
+ *         description: Missing required field(s) / Non-string field(s)
+ *       401:
+ *         description: Unauthorized
+ *     security:
+ *       - BearerAuth: []
+ *
  * /api/contacts/{id}:
- *   delete:
- *     summary: Delete a contact by ID
- *     description: Deletes a contact with the provided ID.
+ *   get:
+ *     summary: Get a contact by ID
+ *     description: |
+ *       Retrieves the contact with the specified ID.
+ *       If the ID exists, returns the contact object in JSON format with status 200.
+ *       If the ID does not exist, returns JSON with the key "message": "not found" and status 404.
  *     produces:
  *       - application/json
+ *     tags:
+ *       - Contacts
+ *     parameters:
+ *       - name: id
+ *         description: ID of the contact to retrieve
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Contact retrieved successfully
+ *       404:
+ *         description: Contact not found
+ *       401:
+ *         description: Unauthorized
+ *     security:
+ *       - BearerAuth: []
+ *
+ *   delete:
+ *     summary: Delete a contact by ID
+ *     description: |
+ *       Deletes the contact with the specified ID.
+ *       If the ID exists, returns JSON with the key "message": "contact deleted" and status 200.
+ *       If the ID does not exist, returns JSON with the key "message": "not found" and status 404.
+ *     produces:
+ *       - application/json
+ *     tags:
+ *       - Contacts
  *     parameters:
  *       - name: id
  *         description: ID of the contact to delete
@@ -168,31 +166,25 @@ module.exports = routerContacts;
  *         type: string
  *     responses:
  *       200:
- *         description: Contact successfully deleted.
- *         schema:
- *           type: object
- *           properties:
- *             message:
- *               type: string
- *               example: contact deleted
+ *         description: Contact deleted successfully
  *       404:
- *         description: Contact not found.
- *         schema:
- *           type: object
- *           properties:
- *             message:
- *               type: string
- *               example: not found
- */
-
-/**
- * @swagger
- * /api/contacts/{id}:
+ *         description: Contact not found
+ *       401:
+ *         description: Unauthorized
+ *     security:
+ *       - BearerAuth: []
+ *
  *   put:
  *     summary: Update a contact by ID
- *     description: Updates the contact with the provided ID with the fields provided in the request body (name, email, and phone). Validation is performed for adding contacts as well.
+ *     description: |
+ *       Updates the contact with the specified ID.
+ *       Receives body in JSON format with updates to any of the fields (validation present as in contact creation).
+ *       If successful, returns the updated contact object with status 200.
+ *       If the ID does not exist, returns JSON with the key "message": "not found" and status 404.
  *     produces:
  *       - application/json
+ *     tags:
+ *       - Contacts
  *     parameters:
  *       - name: id
  *         description: ID of the contact to update
@@ -212,37 +204,41 @@ module.exports = routerContacts;
  *               type: string
  *             phone:
  *               type: string
+ *           required:
+ *             - name
+ *             - email
+ *             - phone
  *     responses:
  *       200:
- *         description: The updated contact in JSON format.
- *         schema:
- *           $ref: '#/schemas/addInfo'
+ *         description: Contact updated successfully
  *       404:
- *         description: Contact not found.
- *         schema:
- *           type: object
- *           properties:
- *             message:
- *               type: string
- *               example: not found
- */
-
-/**
- * @swagger
+ *         description: Contact not found
+ *       401:
+ *         description: Unauthorized
+ *     security:
+ *       - BearerAuth: []
+ *
  * /api/contacts/{id}/favorite:
  *   patch:
- *     summary: Update the "favorite" status of a contact by ID
- *     description: Updates the "favorite" field of the contact with the provided ID with the value provided in the request body (must be a boolean value).
+ *     summary: Update the favorite status of a contact by ID
+ *     description: |
+ *       Updates the favorite status of the contact with the specified ID.
+ *       Receives body in JSON format with updates to the favorite field (must be a boolean).
+ *       If successful, returns the updated contact object with status 200.
+ *       If the ID does not exist, returns JSON with the key "message": "not found" and status 404.
+ *       If the required field is missing or is not a boolean, returns JSON with the key "message":"missing field favorite" and status 400.
  *     produces:
  *       - application/json
+ *     tags:
+ *       - Contacts
  *     parameters:
  *       - name: id
- *         description: ID of the contact to update
+ *         description: ID of the contact to update favorite status
  *         in: path
  *         required: true
  *         type: string
  *       - name: body
- *         description: Request body for updating the "favorite" status of a contact
+ *         description: Request body for updating the favorite status of a contact
  *         in: body
  *         required: true
  *         schema:
@@ -250,25 +246,17 @@ module.exports = routerContacts;
  *           properties:
  *             favorite:
  *               type: boolean
+ *           required:
+ *             - favorite
  *     responses:
  *       200:
- *         description: The updated contact in JSON format.
- *         schema:
- *           $ref: '#/schemas/updateFavorite'
+ *         description: Favorite status updated successfully
  *       400:
- *         description: Missing field "favorite" in the request body.
- *         schema:
- *           type: object
- *           properties:
- *             message:
- *               type: string
- *               example: missing field favorite
+ *         description: Missing field favorite / Invalid field type
  *       404:
- *         description: Contact not found.
- *         schema:
- *           type: object
- *           properties:
- *             message:
- *               type: string
- *               example: not found
+ *         description: Contact not found
+ *       401:
+ *         description: Unauthorized
+ *     security:
+ *       - BearerAuth: []
  */

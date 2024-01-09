@@ -101,7 +101,7 @@ const validateAuth = (schema) => {
   const func = (req, res, next) => {
     const { error } = schema.validate(req.body);
     if (error) {
-      next(HttpError(400, "Помилка від Joi або іншої бібліотеки валідації"));
+      next(HttpError(400, error));
     }
     next();
   };
