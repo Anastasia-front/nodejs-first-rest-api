@@ -342,13 +342,16 @@ module.exports = routerContacts;
  *       properties:
  *         name:
  *           type: string
- *           description: The name of the contact.
+ *           description: The name of the contact
+ *           example: 'George'
  *         email:
  *           type: string
- *           description: The email of the contact.
+ *           description: The email of the contact
+ *           example: 'sample@gou.com'
  *         phone:
  *           type: string
- *           description: The phone number of the contact.
+ *           description: The phone number of the contact
+ *           example: '72634582'
  *         favorite:
  *           type: boolean
  *           description: Indicates whether the contact is marked as a favorite.
@@ -362,55 +365,60 @@ module.exports = routerContacts;
  *       properties:
  *         name:
  *           type: string
+ *           example: 'Lucy'
  *         email:
  *           type: string
+ *           example: 'sample@lui.com'
  *         phone:
  *           type: string
+ *           example: '777665'
  *         favorite:
  *           type: boolean
+ *           example: true
  *         owner:
  *           type: string
+ *           example: '659d8e83e29b812a4780e23b'
  *         _id:
  *           type: string
+ *           example: '659fd43e541fcb6fadafe958'
  *         createdAt:
  *           type: string
  *           format: date-time
  *         updatedAt:
  *           type: string
  *           format: date-time
- *       required:
- *         - name
- *         - email
- *         - phone
- *         - favorite
- *         - owner
- *         - _id
- *         - createdAt
- *         - updatedAt
  * 
  *     OwnerDetails:
  *       type: object
  *       properties:
  *         _id:
- *           type: string
+ *           type: string 
+ *           example: '659fd87d99f63519a9c13270'
  *         email:
  *           type: string
+ *           example: 'sample@gou.com'
  *         subscription:
  *           type: string
+ *           example: 'pro'
  *     
  *     ContactDetails:
  *       type: object
  *       properties:
  *         _id:
  *           type: string
+ *           example: '659fd43e541fcb6fadafe958'
  *         name:
  *           type: string
+ *           example: 'George'
  *         email:
  *           type: string
+ *           example: 'sample@gou.com'
  *         phone:
  *           type: string
+ *           example: '123123123'
  *         favorite:
  *           type: boolean
+ *           example: false
  *         owner:
  *           $ref: '#/components/schemas/OwnerDetails'
  *     

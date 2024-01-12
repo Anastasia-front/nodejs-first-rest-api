@@ -90,7 +90,7 @@ module.exports = routerAuth;
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/RegisterResponseSchema'
+ *               $ref: '#/components/schemas/RegisterResponse'
  *       400:
  *         description: Validation error
  *         content:
@@ -102,7 +102,7 @@ module.exports = routerAuth;
  *         content:
  *           application/json:
  *             example:
- *               message: ' Email in used'
+ *               message: 'Email in use'
  *
  * /api/user/login:
  *   post:
@@ -124,10 +124,14 @@ module.exports = routerAuth;
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/components/schemas/LoginSchema'
+ *           $ref: '#/components/schemas/Login'
  *     responses:
  *       200:
  *         description: User logged in successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/LoginResponse'
  *       400:
  *         description: Validation error
  *         content:
@@ -153,13 +157,8 @@ module.exports = routerAuth;
  *       - application/json
  *     tags:
  *       - Auth
- *     parameters:
- *       - name: body
- *         description: Request body for user logout
- *         in: body
- *         required: true
  *     responses:
- *       204:
+ *       200:
  *         description: User logged out successfully
  *         content:
  *           application/json:
@@ -192,9 +191,9 @@ module.exports = routerAuth;
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/CurrentResponseSchema'
+ *               $ref: '#/components/schemas/CurrentResponse'
  *       401:
- *         description: Not authorized
+ *         description: Unauthorized
  *         content:
  *           application/json:
  *             example:
@@ -267,7 +266,7 @@ module.exports = routerAuth;
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/components/schemas/EmailSchema'
+ *           $ref: '#/components/schemas/Email'
  *     responses:
  *       200:
  *         description: Verification email sent successfully
@@ -315,14 +314,14 @@ module.exports = routerAuth;
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/components/schemas/AvatarSchema'
+ *           $ref: '#/components/schemas/Avatar'
  *     responses:
  *       200:
  *         description: Avatar updated successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/AvatarResponseSchema'
+ *               $ref: '#/components/schemas/AvatarResponse'
  *       400:
  *         description: Avatar upload failed
  *         content:
@@ -330,11 +329,11 @@ module.exports = routerAuth;
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  *       401:
- *         description: Verification was passed
+ *         description: Unauthorized
  *         content:
  *           application/json:
  *             example:
- *               message: 'Verification has already been passed'
+ *               message: 'Not Authorized'
  *       404:
  *         description: User not found or incorrect path
  *         content:
@@ -363,7 +362,7 @@ module.exports = routerAuth;
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/components/schemas/UpdateSubscriptionSchema'
+ *           $ref: '#/components/schemas/UpdateSubscription'
  *     responses:
  *       200:
  *         description: Avatar updated successfully
@@ -397,7 +396,7 @@ module.exports = routerAuth;
  * @swagger
  * components:
  *   schemas:
- *     RegisterSchema:
+ *     Register:
  *       type: object
  *       properties:
  *         email:
@@ -419,7 +418,7 @@ module.exports = routerAuth;
  *         - password
  *         - email
  * 
- *     RegisterResponseSchema:
+ *     RegisterResponse:
  *       type: object
  *       properties:
  *         email:
@@ -432,11 +431,8 @@ module.exports = routerAuth;
  *             - pro
  *             - business
  *           example: 'starter'
- *       required:
- *         - subscription
- *         - email
  *
- *     LoginSchema:
+ *     Login:
  *       type: object
  *       properties:
  *         email:
@@ -450,8 +446,24 @@ module.exports = routerAuth;
  *       required:
  *         - password
  *         - email
+ * 
+ *     LoginResponse:
+ *       type: object
+ *       properties:
+ *         token:
+ *           type: string
+ *           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWQ4ZTgzZTI5YjgxMmE0NzgwZTIzYiIsImlhdCI6MTcwNTA1Nzg1NSwiZXhwIjoxNzA1MTI5ODU1fQ.JQfF-wwr90tk2MtDVkYSxKC9iaornfDDWhgdv2n3lA4"
+ *         user:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *               example: "example@mail.com"
+ *             subscription:
+ *               type: string
+ *               example: "business"
  *
- *     UpdateSubscriptionSchema:
+ *     UpdateSubscription:
  *       type: object
  *       properties:
  *         subscription:
@@ -462,7 +474,7 @@ module.exports = routerAuth;
  *             - business
  *           example: 'pro'
  *
- *     EmailSchema:
+ *     Email:
  *       type: object
  *       properties:
  *         email:
@@ -470,7 +482,7 @@ module.exports = routerAuth;
  *           pattern: '^[^\s@]+@[^\s@]+\.[^\s@]+$'
  *           example: 'user@example.com'
  *
- *     AvatarSchema:
+ *     Avatar:
  *       type: object
  *       properties:
  *         avatar:
@@ -478,7 +490,7 @@ module.exports = routerAuth;
  *           format: binary
  *           example: 'base64encodedImage'
  * 
- *     AvatarResponseSchema:
+ *     AvatarResponse:
  *       type: object
  *       properties:
  *         avatar:
@@ -486,47 +498,47 @@ module.exports = routerAuth;
  *           format: binary
  *           example: "avatar/659d8e83e29b812a4780e23b_small-image_2024-01-06_14-50-35.png"
  *
- *   UserDetails:
- *     type: object
- *     properties:
- *       _id:
- *         type: string
- *         example: "659d8e83e29b812a4780e23b"
- *       password:
- *         type: string
- *         example: "$2b$10$COMf4mf6654/gvJQ7K1kNuOcKV/XPbNhqqIbuaCgC36u7Ci0zzXZK"
- *       email:
- *         type: string
- *         example: "vodixe5354@pursip.com"
- *       subscription:
- *         type: string
- *         enum:
- *           - starter
- *           - pro
- *           - business
- *         example: "pro"
- *       avatarURL:
- *         type: string
- *         example: "avatar/659d8e83e29b812a4780e23b_small-team.png"
- *       verify:
- *         type: boolean
- *         example: true
- *       verificationToken:
- *         type: string
- *         example: ""
- *       createdAt:
- *         type: string
- *         format: date-time
- *         example: "2024-01-09T18:20:51.603Z"
- *       updatedAt:
- *         type: string
- *         format: date-time
- *         example: "2024-01-12T09:38:33.177Z"
- *       token:
- *         type: string
- *         example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWQ4ZTgzZTI5YjgxMmE4NzgwZTIzYiIsImlhdCI6MTcwNTA1MTUwNCwiZXhwIjoxNzA1MTIzNTA0fQ.p_OVz4tl9StcR7R4nuoRO6l-oCt6Oizxpvflh0Xbz6I"
+ *     UserDetails:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "659d8e83e29b812a4780e23b"
+ *         password:
+ *           type: string
+ *           example: "$2b$10$COMf4mf6654/gvJQ7K1kNuOcKV/XPbNhqqIbuaCgC36u7Ci0zzXZK"
+ *         email:
+ *           type: string
+ *           example: "example@mail.com"
+ *         subscription:
+ *           type: string
+ *           enum:
+ *             - starter
+ *             - pro
+ *             - business
+ *           example: "pro"
+ *         avatarURL:
+ *           type: string
+ *           example: "avatar/659d8e83e29b812a4780e23b_small-team.png"
+ *         verify:
+ *           type: boolean
+ *           example: true
+ *         verificationToken:
+ *           type: string
+ *           example: ""
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2024-01-09T18:20:51.603Z"
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2024-01-12T09:38:33.177Z"
+ *         token:
+ *           type: string
+ *           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWQ4ZTgzZTI5YjgxMmE4NzgwZTIzYiIsImlhdCI6MTcwNTA1MTUwNCwiZXhwIjoxNzA1MTIzNTA0fQ.p_OVz4tl9StcR7R4nuoRO6l-oCt6Oizxpvflh0Xbz6I"
  * 
- *     CurrentResponseSchema:
+ *     CurrentResponse:
  *       type: object
  *       properties:
  *         subscription:
