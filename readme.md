@@ -90,6 +90,8 @@ default: "starter"
 
 
 # Swagger documentation 
+Link to documentation:</br>
+https://contacts-backend-eikd.onrender.com/api-docs/
 ![screenshot](./public/screenshots/1.png)
 ![screenshot](./public/screenshots/2.png)
 ![screenshot](./public/screenshots/3.png)
