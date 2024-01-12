@@ -1,15 +1,15 @@
 # Розділи опису
 
 - [Postman](#Postman)
-  - [Контакти](#Контакти)
-  - [Аутентифікація](#Аутентифікація)
-- [Swagger](#Swagger)
+  - [Routes api/user](#routes-api/user)  
+  - [Routes api/contact](#routes-api/contact)
+- [Swagger documentation](#swagger-documentation)
 
 # Postman
 
 Щоб перевірити роботу REST API пиши так:
 
-## Аутентифікація
+## Routes api/user 
 
 ### POST http://localhost:3000/api/user/register
 
@@ -57,7 +57,7 @@ default: "starter"
 - `npm run lint:fix` &mdash; та ж перевірка лінтера, але з автоматичними виправленнями простих помилок
 
 
-## Контакти
+## Routes api/contact
 
 ### GET http://localhost:3000/api/contact
 
@@ -89,7 +89,7 @@ default: "starter"
 `Відповідь` &mdash; якщо в body немає якихось обов'язкових полів або вони не строки, повертається json з ключем {"message":"missing field favorite"} і статусом 400; якщо з body всe добре - повертається оновлений об'єкт контакту зі статусом 200, інакше повертається json з ключем "message": "not found" і статусом 404
 
 
-# Swagger
+# Swagger documentation 
 ![screenshot](./public/screenshots/1.png)
 ![screenshot](./public/screenshots/2.png)
 ![screenshot](./public/screenshots/3.png)
