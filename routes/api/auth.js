@@ -31,14 +31,14 @@ routerAuth.get("/current", authenticate, ctrlUser.getCurrent);
 routerAuth.post("/logout", authenticate, ctrlUser.logout);
 
 routerAuth.patch(
-  "/",
+  "/subscription",
   authenticate,
   validateSubscription(schema.updateSubscription),
   ctrlUser.updateSubscription
 );
 
 routerAuth.patch(
-  "/avatars",
+  "/avatar",
   authenticate,
   upload.single("avatar"),
 
@@ -63,7 +63,7 @@ module.exports = routerAuth;
 
 /**
  * @swagger
- * /api/users/register:
+ * /api/user/register:
  *   post:
  *     summary: User registration
  *     description: |
@@ -87,12 +87,24 @@ module.exports = routerAuth;
  *     responses:
  *       201:
  *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RegisterResponseSchema'
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       409:
  *         description: Email already in use
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: ' Email in used'
  *
- * /api/users/login:
+ * /api/user/login:
  *   post:
  *     summary: User login
  *     description: |
@@ -118,10 +130,18 @@ module.exports = routerAuth;
  *         description: User logged in successfully
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       401:
- *         description: Incorrect email or password
+ *         description: Incorrect email or password or email not verified
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Incorrect email or password / Email not verified'
  *
- * /api/users/logout:
+ * /api/user/logout:
  *   post:
  *     summary: User logout
  *     description: |
@@ -141,19 +161,27 @@ module.exports = routerAuth;
  *     responses:
  *       204:
  *         description: User logged out successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Logout Successful'
  *       401:
- *         description: Not authorized
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Authorized'
  *     security:
  *       - BearerAuth: []
  *
- * /api/users/current:
+ * /api/user/current:
  *   get:
  *     summary: Get current user
  *     description: |
  *       Retrieves information about the current user.
  *       Requires the Authorization header: "Bearer {{token}}".
  *       - If the user does not exist, returns {"message": "Not authorized"} with status 401.
- *       - Otherwise, returns { "email": "example@example.com" } with status 200.
+ *       - Otherwise, returns object with status 200.
  *     produces:
  *       - application/json
  *     tags:
@@ -161,12 +189,20 @@ module.exports = routerAuth;
  *     responses:
  *       200:
  *         description: Current user retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CurrentResponseSchema'
  *       401:
  *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Authorized'
  *     security:
  *       - BearerAuth: []
  *
- * /api/users/verify/{verificationToken}:
+ * /api/user/verify/{verificationToken}:
  *   get:
  *     summary: Verify user email
  *     description: |
@@ -186,16 +222,36 @@ module.exports = routerAuth;
  *     responses:
  *       200:
  *         description: Email verified successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Verification Successful'
  *       400:
  *         description: Invalid or expired verification token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Authorized'
+ *       404:
+ *         description: User not found or incorrect path
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Found'
  *     security:
  *       - BearerAuth: []
  *
- * /api/users/verify:
+ * /api/user/verify:
  *   post:
  *     summary: Resend email verification
  *     description: |
- *       Resends the email verification to the user.
+ *       Resend the email verification to the user.
  *       Receives body in the format {email}.
  *       - Email is a mandatory string with validation.
  *       - If the email is not found in the system, returns { "message": "Email not found" } with status 404.
@@ -215,14 +271,32 @@ module.exports = routerAuth;
  *     responses:
  *       200:
  *         description: Verification email sent successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Verification email sent'
  *       400:
- *         description: Email already verified / Validation error
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Authorized'
  *       404:
- *         description: Email not found
+ *         description: User not found or incorrect path
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Found'
  *     security:
  *       - BearerAuth: []
  *
- * /api/users/avatars:
+ * /api/user/avatar:
  *   patch:
  *     summary: Update user avatar
  *     description: |
@@ -245,8 +319,76 @@ module.exports = routerAuth;
  *     responses:
  *       200:
  *         description: Avatar updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AvatarResponseSchema'
  *       400:
- *         description: Not authorized / Avatar upload failed
+ *         description: Avatar upload failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         description: Verification was passed
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Verification has already been passed'
+ *       404:
+ *         description: User not found or incorrect path
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Found'
+ *     security:
+ *       - BearerAuth: []
+ * 
+ * /api/user/subscription:
+ *   patch:
+ *     summary: Update user subscription
+ *     description: |
+ *       Updates the user's subscription.
+ *       Requires the Authorization header: "Bearer {{token}}" and a body with subscription field.
+ *       - If the user does not exist, returns {"message": "Not authorized"} with status 401.
+ *       - If the subscription field is absent, returns {"message":"\"subscription\" is required"} with status 400.
+ *       - If the changing is successful, updates the user's subscription and returns { "message": "Avatar updated successfully", "avatarUrl": "updated-avatar-url" } with status 200.
+ *     produces:
+ *       - application/json
+ *     tags:
+ *       - Auth
+ *     parameters:
+ *       - name: body
+ *         description: Request body for updating user avatar
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/components/schemas/UpdateSubscriptionSchema'
+ *     responses:
+ *       200:
+ *         description: Avatar updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserDetails'
+ *       400:
+ *         description: Subscription is required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Authorized'
+ *       404:
+ *         description: User not found or incorrect path
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Found'
  *     security:
  *       - BearerAuth: []
  */
@@ -276,6 +418,23 @@ module.exports = routerAuth;
  *       required:
  *         - password
  *         - email
+ * 
+ *     RegisterResponseSchema:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           example: 'user@example.com'
+ *         subscription:
+ *           type: string
+ *           enum:
+ *             - starter
+ *             - pro
+ *             - business
+ *           example: 'starter'
+ *       required:
+ *         - subscription
+ *         - email
  *
  *     LoginSchema:
  *       type: object
@@ -288,9 +447,9 @@ module.exports = routerAuth;
  *           type: string
  *           min: 7
  *           example: 'userPassword'
- *         required:
- *           - password
- *           - email
+ *       required:
+ *         - password
+ *         - email
  *
  *     UpdateSubscriptionSchema:
  *       type: object
@@ -318,4 +477,76 @@ module.exports = routerAuth;
  *           type: string
  *           format: binary
  *           example: 'base64encodedImage'
+ * 
+ *     AvatarResponseSchema:
+ *       type: object
+ *       properties:
+ *         avatar:
+ *           type: string
+ *           format: binary
+ *           example: "avatar/659d8e83e29b812a4780e23b_small-image_2024-01-06_14-50-35.png"
+ *
+ *   UserDetails:
+ *     type: object
+ *     properties:
+ *       _id:
+ *         type: string
+ *         example: "659d8e83e29b812a4780e23b"
+ *       password:
+ *         type: string
+ *         example: "$2b$10$COMf4mf6654/gvJQ7K1kNuOcKV/XPbNhqqIbuaCgC36u7Ci0zzXZK"
+ *       email:
+ *         type: string
+ *         example: "vodixe5354@pursip.com"
+ *       subscription:
+ *         type: string
+ *         enum:
+ *           - starter
+ *           - pro
+ *           - business
+ *         example: "pro"
+ *       avatarURL:
+ *         type: string
+ *         example: "avatar/659d8e83e29b812a4780e23b_small-team.png"
+ *       verify:
+ *         type: boolean
+ *         example: true
+ *       verificationToken:
+ *         type: string
+ *         example: ""
+ *       createdAt:
+ *         type: string
+ *         format: date-time
+ *         example: "2024-01-09T18:20:51.603Z"
+ *       updatedAt:
+ *         type: string
+ *         format: date-time
+ *         example: "2024-01-12T09:38:33.177Z"
+ *       token:
+ *         type: string
+ *         example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWQ4ZTgzZTI5YjgxMmE4NzgwZTIzYiIsImlhdCI6MTcwNTA1MTUwNCwiZXhwIjoxNzA1MTIzNTA0fQ.p_OVz4tl9StcR7R4nuoRO6l-oCt6Oizxpvflh0Xbz6I"
+ * 
+ *     CurrentResponseSchema:
+ *       type: object
+ *       properties:
+ *         subscription:
+ *           type: string
+ *           enum:
+ *             - starter
+ *             - pro
+ *             - business
+ *           example: 'business'
+ *         email:
+ *           type: string
+ *           example: 'example@mail.com'
+ *       required:
+ *         - subscription
+ *         - email
+ * 
+ *     ErrorResponse:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           description: A message describing the error.
  */

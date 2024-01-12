@@ -52,7 +52,7 @@ module.exports = routerContacts;
 /**
  * @swagger
  * tags:
- *   name: Contacts
+ *   name: Contact
  *   description: Endpoints for managing contacts  
  * securityDefinitions:
  *   BearerAuth:
@@ -64,21 +64,33 @@ module.exports = routerContacts;
 
 /**
  * @swagger
- *
- * /api/contacts:
+ * /api/contact:
  *   get:
  *     summary: Get all contacts
- *     description: |
- *       Returns an array of all contacts in JSON format with status 200.
+ *     description: Returns an array of all contacts in JSON format with status 200.
  *     produces:
  *       - application/json
  *     tags:
- *       - Contacts
+ *       - Contact
  *     responses:
  *       200:
  *         description: An array of contacts
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/GetAllContactsResponse'
+ *       400:
+ *         description: Missing required field(s) / Non-string field(s)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Authorized'
  *     security:
  *       - BearerAuth: []
  *
@@ -92,36 +104,37 @@ module.exports = routerContacts;
  *     produces:
  *       - application/json
  *     tags:
- *       - Contacts
+ *       - Contact
  *     parameters:
  *       - name: body
  *         description: Request body for creating a new contact
  *         in: body
  *         required: true
  *         schema:
- *           type: object
- *           properties:
- *             name:
- *               type: string
- *             email:
- *               type: string
- *             phone:
- *               type: string
- *           required:
- *             - name
- *             - email
- *             - phone
+ *           $ref: '#/components/schemas/ContactInput'
  *     responses:
  *       201:
  *         description: Contact created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ContactResponse'
  *       400:
  *         description: Missing required field(s) / Non-string field(s)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Authorized'
  *     security:
  *       - BearerAuth: []
  *
- * /api/contacts/{id}:
+ * /api/contact/{id}:
  *   get:
  *     summary: Get a contact by ID
  *     description: |
@@ -131,7 +144,7 @@ module.exports = routerContacts;
  *     produces:
  *       - application/json
  *     tags:
- *       - Contacts
+ *       - Contact
  *     parameters:
  *       - name: id
  *         description: ID of the contact to retrieve
@@ -141,10 +154,22 @@ module.exports = routerContacts;
  *     responses:
  *       200:
  *         description: Contact retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ContactResponse'
  *       404:
- *         description: Contact not found
+ *         description: Contact not found or incorrect path
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Found'
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Authorized'
  *     security:
  *       - BearerAuth: []
  *
@@ -157,7 +182,7 @@ module.exports = routerContacts;
  *     produces:
  *       - application/json
  *     tags:
- *       - Contacts
+ *       - Contact
  *     parameters:
  *       - name: id
  *         description: ID of the contact to delete
@@ -167,10 +192,22 @@ module.exports = routerContacts;
  *     responses:
  *       200:
  *         description: Contact deleted successfully
+ *         content:
+ *           application/json:
+ *            example:
+ *             message: "Contact Deleted"
  *       404:
- *         description: Contact not found
+ *         description: Contact not found or incorrect path
+ *         content:
+ *           application/json:
+ *             example:
+ *              message: "Not Found"
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Authorized'
  *     security:
  *       - BearerAuth: []
  *
@@ -184,7 +221,7 @@ module.exports = routerContacts;
  *     produces:
  *       - application/json
  *     tags:
- *       - Contacts
+ *       - Contact
  *     parameters:
  *       - name: id
  *         description: ID of the contact to update
@@ -196,29 +233,30 @@ module.exports = routerContacts;
  *         in: body
  *         required: true
  *         schema:
- *           type: object
- *           properties:
- *             name:
- *               type: string
- *             email:
- *               type: string
- *             phone:
- *               type: string
- *           required:
- *             - name
- *             - email
- *             - phone
+ *           $ref: '#/components/schemas/ContactInput'
  *     responses:
  *       200:
  *         description: Contact updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ContactResponse'
  *       404:
- *         description: Contact not found
+ *         description: Contact not found or incorrect path
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Found'
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Authorized'
  *     security:
  *       - BearerAuth: []
  *
- * /api/contacts/{id}/favorite:
+ * /api/contact/{id}/favorite:
  *   patch:
  *     summary: Update the favorite status of a contact by ID
  *     description: |
@@ -230,7 +268,7 @@ module.exports = routerContacts;
  *     produces:
  *       - application/json
  *     tags:
- *       - Contacts
+ *       - Contact
  *     parameters:
  *       - name: id
  *         description: ID of the contact to update favorite status
@@ -242,21 +280,158 @@ module.exports = routerContacts;
  *         in: body
  *         required: true
  *         schema:
- *           type: object
- *           properties:
- *             favorite:
- *               type: boolean
- *           required:
- *             - favorite
+ *           $ref: '#/components/schemas/UpdateFavoriteInput'
  *     responses:
  *       200:
  *         description: Favorite status updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ContactResponse'
  *       400:
  *         description: Missing field favorite / Invalid field type
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       404:
- *         description: Contact not found
+ *         description: Contact not found or incorrect path
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Found'
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: 'Not Authorized'
  *     security:
  *       - BearerAuth: []
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Contact:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The unique identifier for the contact.
+ *         name:
+ *           type: string
+ *           description: The name of the contact.
+ *         email:
+ *           type: string
+ *           description: The email of the contact.
+ *         phone:
+ *           type: string
+ *           description: The phone number of the contact.
+ *         favorite:
+ *           type: boolean
+ *           description: Indicates whether the contact is marked as a favorite.
+ *       required:
+ *         - name
+ *         - email
+ *         - phone
+ *
+ *     ContactInput:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: The name of the contact.
+ *         email:
+ *           type: string
+ *           description: The email of the contact.
+ *         phone:
+ *           type: string
+ *           description: The phone number of the contact.
+ *         favorite:
+ *           type: boolean
+ *           description: Indicates whether the contact is marked as a favorite.
+ *       required:
+ *         - name
+ *         - email
+ *         - phone
+ *
+ *     ContactResponse:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *         email:
+ *           type: string
+ *         phone:
+ *           type: string
+ *         favorite:
+ *           type: boolean
+ *         owner:
+ *           type: string
+ *         _id:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *       required:
+ *         - name
+ *         - email
+ *         - phone
+ *         - favorite
+ *         - owner
+ *         - _id
+ *         - createdAt
+ *         - updatedAt
+ * 
+ *     OwnerDetails:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *         email:
+ *           type: string
+ *         subscription:
+ *           type: string
+ *     
+ *     ContactDetails:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *         name:
+ *           type: string
+ *         email:
+ *           type: string
+ *         phone:
+ *           type: string
+ *         favorite:
+ *           type: boolean
+ *         owner:
+ *           $ref: '#/components/schemas/OwnerDetails'
+ *     
+ *     GetAllContactsResponse:
+ *       type: array
+ *       items:
+ *         $ref: '#/components/schemas/ContactDetails'
+ * 
+ *     ErrorResponse:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           description: A message describing the error.
+ *
+ *     UpdateFavoriteInput:
+ *       type: object
+ *       properties:
+ *         favorite:
+ *           type: boolean
+ *           description: Indicates whether the contact should be marked as a favorite.
+ *       required:
+ *         - favorite
  */
