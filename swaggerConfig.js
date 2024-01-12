@@ -2,17 +2,36 @@ const swaggerJsdoc = require("swagger-jsdoc");
 
 const options = {
   swaggerDefinition: {
+    openapi: "3.0.1",
     info: {
-      version: "1.0.0",
+      version: "1.0.3",
       title: "Node.js - first REST API",
       description:
-        "**API documentation** <p>Стек технологій, що використовується у проєкті: <p>Node.js - середовище виконання JavaScript на сервері. <p>Express.js - фреймворк для розробки веб-додатків на Node.js. <p>MongoDB - NoSQL база даних. <p>Mongoose - бібліотека для роботи з MongoDB у Node.js. ",
+        "**API documentation**<p>This project utilizes the following technology stack:</p><ul><li><strong>Node.js:</strong> JavaScript runtime environment on the server.</li><li><strong>Express.js:</strong> Framework for developing web applications on Node.js.</li><li><strong>MongoDB:</strong> NoSQL database.</li><li><strong>Mongoose:</strong> Library for working with MongoDB у Node.js.</li></ul> ",
+    },
+    contact: {
+      name: "Anastasiia",
+      url: "https://github.com/Anastasia-front/nodejs-first-rest-api",
     },
     basePath: "/",
   },
+  consumes: ["application/json", "multipart/form-data"],
+  produces: ["application/json"],
   servers: [
     {
-      url: "http://localhost:3007/",
+      url: "https://contacts-backend-eikd.onrender.com/",
+      description: "Production",
+    },
+    { url: "http://localhost:3007", description: "Development" },
+  ],
+  tags: [
+    {
+      name: "Auth",
+      description: "Authorization endpoints",
+    },
+    {
+      name: "Contacts",
+      description: "Contacts endpoints",
     },
   ],
   apis: ["./routes/api/*.js"],

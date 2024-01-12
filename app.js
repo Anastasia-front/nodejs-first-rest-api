@@ -17,8 +17,8 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use("/api/users", routerAuth);
-app.use("/api/contacts", routerContacts);
+app.use("/api/user", routerAuth);
+app.use("/api/contact", routerContacts);
 
 app.use((req, res) => {
   res.status(404).json({ message: "not found" });
