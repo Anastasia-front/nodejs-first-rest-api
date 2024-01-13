@@ -53,12 +53,14 @@ module.exports = routerAuth;
  *   name: Auth
  *   description: Authorization endpoints
  * components:
- *  securitySchemes:
- *    BearerAuth:
- *      type: apiKey
- *      name: Authorization
- *      in: header
- *      description: Enter your Bearer token here
+ *   securitySchemes:
+ *     Bearer:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *       name: Authorization
+ *       in: header
+ *       description: Enter your Bearer token here
  */
 
 /**
@@ -75,15 +77,16 @@ module.exports = routerAuth;
  *       - If registration is successful, returns { "user": { "email": "example@example.com" } } with status 201.
  *     produces:
  *       - application/json
+ *     consumes:
+ *       - application/json
  *     tags:
  *       - Auth
- *     parameters:
- *       - name: body
- *         description: Request body for user registration
- *         in: body
- *         required: true
- *         schema:
- *           $ref: '#/components/schemas/Register'
+ *     requestBody:
+ *       description: Request body for user registration
+ *       content:
+ *         'application/json':
+ *           schema:
+ *             $ref: '#/components/schemas/Register'
  *     responses:
  *       201:
  *         description: User registered successfully
@@ -116,15 +119,16 @@ module.exports = routerAuth;
  *       - If login is successful, generates a token, stores it in the user's current field, and returns { "token": "exampletoken", "user": { "email": "example@example.com" } } with status 200.
  *     produces:
  *       - application/json
+ *     consumes:
+ *       - application/json
  *     tags:
  *       - Auth
- *     parameters:
- *       - name: body
- *         description: Request body for user login
- *         in: body
- *         required: true
- *         schema:
- *           $ref: '#/components/schemas/Login'
+ *     requestBody:
+ *       description: Request body for user login
+ *       content:
+ *         'application/json':
+ *           schema:
+ *             $ref: '#/components/schemas/Login'
  *     responses:
  *       200:
  *         description: User logged in successfully
@@ -155,6 +159,8 @@ module.exports = routerAuth;
  *       - Otherwise, deletes the token in the current user and returns status 204.
  *     produces:
  *       - application/json
+ *     consumes:
+ *       - application/json
  *     tags:
  *       - Auth
  *     responses:
@@ -171,7 +177,7 @@ module.exports = routerAuth;
  *             example:
  *               message: 'Not Authorized'
  *     security:
- *       - BearerAuth: []
+ *       - Bearer: []
  *
  * /api/user/current:
  *   get:
@@ -182,6 +188,8 @@ module.exports = routerAuth;
  *       - If the user does not exist, returns {"message": "Not authorized"} with status 401.
  *       - Otherwise, returns object with status 200.
  *     produces:
+ *       - application/json
+ *     consumes:
  *       - application/json
  *     tags:
  *       - Auth
@@ -199,7 +207,7 @@ module.exports = routerAuth;
  *             example:
  *               message: 'Not Authorized'
  *     security:
- *       - BearerAuth: []
+ *       - Bearer: []
  *
  * /api/user/verify/{verificationToken}:
  *   get:
@@ -209,6 +217,8 @@ module.exports = routerAuth;
  *       - If the token is valid, marks the user's email as verified and returns { "message": "Email verified successfully" } with status 200.
  *       - If the token is invalid or expired, returns { "message": "Invalid or expired verification token" } with status 400.
  *     produces:
+ *       - application/json
+ *     consumes:
  *       - application/json
  *     tags:
  *       - Auth
@@ -244,7 +254,7 @@ module.exports = routerAuth;
  *             example:
  *               message: 'Not Found'
  *     security:
- *       - BearerAuth: []
+ *       - Bearer: []
  *
  * /api/user/verify:
  *   post:
@@ -258,15 +268,16 @@ module.exports = routerAuth;
  *       - If the email is valid and not verified, sends a new verification email and returns { "message": "Verification email sent successfully" } with status 200.
  *     produces:
  *       - application/json
+ *     consumes:
+ *       - application/json
  *     tags:
  *       - Auth
- *     parameters:
- *       - name: body
- *         description: Request body for resending email verification
- *         in: body
- *         required: true
- *         schema:
- *           $ref: '#/components/schemas/Email'
+ *     requestBody:
+ *       description: Request body for resending email verification
+ *       content:
+ *         'application/json':
+ *           schema:
+ *            $ref: '#/components/schemas/Email'
  *     responses:
  *       200:
  *         description: Verification email sent successfully
@@ -293,7 +304,7 @@ module.exports = routerAuth;
  *             example:
  *               message: 'Not Found'
  *     security:
- *       - BearerAuth: []
+ *       - Bearer: []
  *
  * /api/user/avatar:
  *   patch:
@@ -306,15 +317,16 @@ module.exports = routerAuth;
  *       - If the upload is successful, updates the user's avatar URL and returns { "message": "Avatar updated successfully", "avatarUrl": "updated-avatar-url" } with status 200.
  *     produces:
  *       - application/json
+ *     consumes:
+ *       - application/json
  *     tags:
  *       - Auth
- *     parameters:
- *       - name: body
- *         description: Request body for updating user avatar
- *         in: body
- *         required: true
- *         schema:
- *           $ref: '#/components/schemas/Avatar'
+ *     requestBody:
+ *       description: Request body for updating user avatar
+ *       content:
+ *         'multipart/form-data':
+ *           schema:
+ *             $ref: '#/components/schemas/Avatar'
  *     responses:
  *       200:
  *         description: Avatar updated successfully
@@ -341,8 +353,8 @@ module.exports = routerAuth;
  *             example:
  *               message: 'Not Found'
  *     security:
- *       - BearerAuth: []
- * 
+ *       - Bearer: []
+ *
  * /api/user/subscription:
  *   patch:
  *     summary: Update user subscription
@@ -354,18 +366,19 @@ module.exports = routerAuth;
  *       - If the changing is successful, updates the user's subscription and returns { "message": "Avatar updated successfully", "avatarUrl": "updated-avatar-url" } with status 200.
  *     produces:
  *       - application/json
+ *     consumes:
+ *       - application/json
  *     tags:
  *       - Auth
- *     parameters:
- *       - name: body
- *         description: Request body for updating user avatar
- *         in: body
- *         required: true
- *         schema:
- *           $ref: '#/components/schemas/UpdateSubscription'
+ *     requestBody:
+ *       description: Request body for updating user subscription
+ *       content:
+ *         'application/json':
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateSubscription'
  *     responses:
  *       200:
- *         description: Avatar updated successfully
+ *         description: Subscription updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -389,7 +402,7 @@ module.exports = routerAuth;
  *             example:
  *               message: 'Not Found'
  *     security:
- *       - BearerAuth: []
+ *       - Bearer: []
  */
 
 /**
@@ -417,7 +430,7 @@ module.exports = routerAuth;
  *       required:
  *         - password
  *         - email
- * 
+ *
  *     RegisterResponse:
  *       type: object
  *       properties:
@@ -446,7 +459,7 @@ module.exports = routerAuth;
  *       required:
  *         - password
  *         - email
- * 
+ *
  *     LoginResponse:
  *       type: object
  *       properties:
@@ -486,10 +499,10 @@ module.exports = routerAuth;
  *       type: object
  *       properties:
  *         avatar:
- *           type: string
+ *           type: file
  *           format: binary
  *           example: 'base64encodedImage'
- * 
+ *
  *     AvatarResponse:
  *       type: object
  *       properties:
@@ -537,7 +550,7 @@ module.exports = routerAuth;
  *         token:
  *           type: string
  *           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWQ4ZTgzZTI5YjgxMmE4NzgwZTIzYiIsImlhdCI6MTcwNTA1MTUwNCwiZXhwIjoxNzA1MTIzNTA0fQ.p_OVz4tl9StcR7R4nuoRO6l-oCt6Oizxpvflh0Xbz6I"
- * 
+ *
  *     CurrentResponse:
  *       type: object
  *       properties:
@@ -554,7 +567,7 @@ module.exports = routerAuth;
  *       required:
  *         - subscription
  *         - email
- * 
+ *
  *     ErrorResponse:
  *       type: object
  *       properties:
@@ -562,3 +575,4 @@ module.exports = routerAuth;
  *           type: string
  *           description: A message describing the error.
  */
+
