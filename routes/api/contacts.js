@@ -53,13 +53,16 @@ module.exports = routerContacts;
  * @swagger
  * tags:
  *   name: Contact
- *   description: Endpoints for managing contacts  
+ *   description: Endpoints for managing contacts
  * securityDefinitions:
- *   BearerAuth:
- *     type: apiKey
- *     name: Authorization
- *     in: header
- *     description: Enter your Bearer token here
+ *   securitySchemes:
+ *     Bearer:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *       name: Authorization
+ *       in: header
+ *       description: Enter your Bearer token here
  */
 
 /**
@@ -69,6 +72,8 @@ module.exports = routerContacts;
  *     summary: Get all contacts
  *     description: Returns an array of all contacts in JSON format with status 200.
  *     produces:
+ *       - application/json
+ *     consumes:
  *       - application/json
  *     tags:
  *       - Contact
@@ -92,7 +97,7 @@ module.exports = routerContacts;
  *             example:
  *               message: 'Not Authorized'
  *     security:
- *       - BearerAuth: []
+ *       - Bearer: []
  *
  *   post:
  *     summary: Create a new contact
@@ -103,15 +108,16 @@ module.exports = routerContacts;
  *       - If successful, adds a unique identifier to the contact object and returns the object with the added id {id, name, email, phone} with status 201.
  *     produces:
  *       - application/json
+ *     consumes:
+ *       - application/json
  *     tags:
  *       - Contact
- *     parameters:
- *       - name: body
- *         description: Request body for creating a new contact
- *         in: body
- *         required: true
- *         schema:
- *           $ref: '#/components/schemas/ContactInput'
+ *     requestBody:
+ *       description: Request body for creating a new contact
+ *       content:
+ *         'application/json':
+ *           schema:
+ *             $ref: '#/components/schemas/ContactInput'
  *     responses:
  *       201:
  *         description: Contact created successfully
@@ -132,7 +138,7 @@ module.exports = routerContacts;
  *             example:
  *               message: 'Not Authorized'
  *     security:
- *       - BearerAuth: []
+ *       - Bearer: []
  *
  * /api/contact/{id}:
  *   get:
@@ -142,6 +148,8 @@ module.exports = routerContacts;
  *       If the ID exists, returns the contact object in JSON format with status 200.
  *       If the ID does not exist, returns JSON with the key "message": "not found" and status 404.
  *     produces:
+ *       - application/json
+ *     consumes:
  *       - application/json
  *     tags:
  *       - Contact
@@ -171,7 +179,7 @@ module.exports = routerContacts;
  *             example:
  *               message: 'Not Authorized'
  *     security:
- *       - BearerAuth: []
+ *       - Bearer: []
  *
  *   delete:
  *     summary: Delete a contact by ID
@@ -180,6 +188,8 @@ module.exports = routerContacts;
  *       If the ID exists, returns JSON with the key "message": "contact deleted" and status 200.
  *       If the ID does not exist, returns JSON with the key "message": "not found" and status 404.
  *     produces:
+ *       - application/json
+ *     consumes:
  *       - application/json
  *     tags:
  *       - Contact
@@ -209,7 +219,7 @@ module.exports = routerContacts;
  *             example:
  *               message: 'Not Authorized'
  *     security:
- *       - BearerAuth: []
+ *       - Bearer: []
  *
  *   put:
  *     summary: Update a contact by ID
@@ -220,6 +230,8 @@ module.exports = routerContacts;
  *       If the ID does not exist, returns JSON with the key "message": "not found" and status 404.
  *     produces:
  *       - application/json
+ *     consumes:
+ *       - application/json
  *     tags:
  *       - Contact
  *     parameters:
@@ -228,12 +240,12 @@ module.exports = routerContacts;
  *         in: path
  *         required: true
  *         type: string
- *       - name: body
- *         description: Request body for updating a contact
- *         in: body
- *         required: true
- *         schema:
- *           $ref: '#/components/schemas/ContactInput'
+ *     requestBody:
+ *       description: Request body for  updating a contact
+ *       content:
+ *         'application/json':
+ *           schema:
+ *             $ref: '#/components/schemas/ContactInput'
  *     responses:
  *       200:
  *         description: Contact updated successfully
@@ -254,7 +266,7 @@ module.exports = routerContacts;
  *             example:
  *               message: 'Not Authorized'
  *     security:
- *       - BearerAuth: []
+ *       - Bearer: []
  *
  * /api/contact/{id}/favorite:
  *   patch:
@@ -267,6 +279,8 @@ module.exports = routerContacts;
  *       If the required field is missing or is not a boolean, returns JSON with the key "message":"missing field favorite" and status 400.
  *     produces:
  *       - application/json
+ *     consumes:
+ *       - application/json
  *     tags:
  *       - Contact
  *     parameters:
@@ -275,12 +289,12 @@ module.exports = routerContacts;
  *         in: path
  *         required: true
  *         type: string
- *       - name: body
- *         description: Request body for updating the favorite status of a contact
- *         in: body
- *         required: true
- *         schema:
- *           $ref: '#/components/schemas/UpdateFavoriteInput'
+ *     requestBody:
+ *       description: Request body for updating the favorite status of a contact
+ *       content:
+ *         'application/json':
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateFavoriteInput'
  *     responses:
  *       200:
  *         description: Favorite status updated successfully
@@ -307,7 +321,7 @@ module.exports = routerContacts;
  *             example:
  *               message: 'Not Authorized'
  *     security:
- *       - BearerAuth: []
+ *       - Bearer: []
  */
 
 /**
@@ -387,12 +401,12 @@ module.exports = routerContacts;
  *         updatedAt:
  *           type: string
  *           format: date-time
- * 
+ *
  *     OwnerDetails:
  *       type: object
  *       properties:
  *         _id:
- *           type: string 
+ *           type: string
  *           example: '659fd87d99f63519a9c13270'
  *         email:
  *           type: string
@@ -400,7 +414,7 @@ module.exports = routerContacts;
  *         subscription:
  *           type: string
  *           example: 'pro'
- *     
+ *
  *     ContactDetails:
  *       type: object
  *       properties:
@@ -421,12 +435,12 @@ module.exports = routerContacts;
  *           example: false
  *         owner:
  *           $ref: '#/components/schemas/OwnerDetails'
- *     
+ *
  *     GetAllContactsResponse:
  *       type: array
  *       items:
  *         $ref: '#/components/schemas/ContactDetails'
- * 
+ *
  *     ErrorResponse:
  *       type: object
  *       properties:
@@ -443,3 +457,4 @@ module.exports = routerContacts;
  *       required:
  *         - favorite
  */
+
