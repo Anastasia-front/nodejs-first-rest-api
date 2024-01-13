@@ -1,15 +1,15 @@
 # Розділи опису
 
 - [Postman](#Postman)
-  - [Routes api/user](#routes-api/user)  
-  - [Routes api/contact](#routes-api/contact)
+  - [Routes "user"](#routes-"user")  
+  - [Routes "contact"](#routes-"contact")
 - [Swagger documentation](#swagger-documentation)
 
 # Postman
 
 Щоб перевірити роботу REST API пиши так:
 
-## Routes api/user 
+## Routes "user"
 
 ### POST http://localhost:3000/api/user/register
 
@@ -57,7 +57,7 @@ default: "starter"
 - `npm run lint:fix` &mdash; та ж перевірка лінтера, але з автоматичними виправленнями простих помилок
 
 
-## Routes api/contact
+## Routes "contact"
 
 ### GET http://localhost:3000/api/contact
 
