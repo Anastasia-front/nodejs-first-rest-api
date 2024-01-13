@@ -81,13 +81,6 @@ module.exports = routerAuth;
  *       - application/json
  *     tags:
  *       - Auth
- *     parameters:
- *       - in: header
- *         name: Content-Type
- *         description: The media type of the body sent to the API.
- *         required: true
- *         type: string
- *         default: application/json
  *     requestBody:
  *       description: Request body for user registration
  *       content:
