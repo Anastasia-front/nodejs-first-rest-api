@@ -83,7 +83,7 @@ module.exports = routerAuth;
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/components/schemas/RegisterSchema'
+ *           $ref: '#/components/schemas/Register'
  *     responses:
  *       201:
  *         description: User registered successfully
