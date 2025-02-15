@@ -5,6 +5,10 @@
   - [Routes "contact"](#routes-"contact")
 - [Swagger documentation](#swagger-documentation)
 
+## English Version
+
+For the document in English, visit: [README.md](README.md)
+
 # Postman
 
 Щоб перевірити роботу REST API пиши так:
