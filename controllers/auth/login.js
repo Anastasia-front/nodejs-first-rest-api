@@ -18,9 +18,9 @@ const login = async (req, res) => {
     throw HttpError(401, "Email or password is wrong");
   }
 
-  if (!user.verify) {
-    throw HttpError(401, "Email not verified");
-  }
+  // if (!user.verify) {
+  //   throw HttpError(401, "Email not verified");
+  // }
 
   const payload = {
     id: user._id,
@@ -32,6 +32,7 @@ const login = async (req, res) => {
   res.json({
     token,
     user: {
+      name: user.name,
       email: user.email,
       subscription: user.subscription,
     },

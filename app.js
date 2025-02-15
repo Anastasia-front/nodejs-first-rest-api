@@ -11,6 +11,16 @@ const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
+const corsOptions = {
+  origin: "http://localhost:3000", 
+  methods: "GET, POST, PUT, DELETE, OPTIONS", 
+  allowedHeaders: "Authorization, Content-Type", 
+  credentials: true, 
+};
+
+app.use(cors(corsOptions));
+
+app.options("*", cors(corsOptions));
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());

@@ -5,9 +5,9 @@ const { nanoid } = require("nanoid");
 const { User } = require("../../models");
 
 const { HttpError } = require("../../helpers");
-const { sendEmail } = require("../../services");
+// const { sendEmail } = require("../../services");
 
-const { BASE_URL } = process.env;
+// const { BASE_URL } = process.env;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -29,14 +29,14 @@ const register = async (req, res) => {
     verificationToken,
   });
 
-  const verifyEmail = {
-    to: email,
-    subject: "Verify email",
-    html: `<a target="_blank" href="${BASE_URL}/api/auth/
-    verify/${verificationToken}">Click verify email</a>`,
-  };
+  // const verifyEmail = {
+  //   to: email,
+  //   subject: "Verify email",
+  //   html: `<a target="_blank" href="${BASE_URL}/api/auth/
+  //   verify/${verificationToken}">Click verify email</a>`,
+  // };
 
-  await sendEmail(verifyEmail);
+  // await sendEmail(verifyEmail);
 
   res.status(201).json({
     email: newUser.email,

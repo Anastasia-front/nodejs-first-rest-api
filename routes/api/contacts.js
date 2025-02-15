@@ -340,7 +340,7 @@ module.exports = routerContacts;
  *         email:
  *           type: string
  *           description: The email of the contact.
- *         phone:
+ *         number:
  *           type: string
  *           description: The phone number of the contact.
  *         favorite:
@@ -362,7 +362,7 @@ module.exports = routerContacts;
  *           type: string
  *           description: The email of the contact
  *           example: 'sample@gou.com'
- *         phone:
+ *         number:
  *           type: string
  *           description: The phone number of the contact
  *           example: '72634582'
@@ -383,7 +383,7 @@ module.exports = routerContacts;
  *         email:
  *           type: string
  *           example: 'sample@lui.com'
- *         phone:
+ *         number:
  *           type: string
  *           example: '777665'
  *         favorite:
@@ -427,7 +427,7 @@ module.exports = routerContacts;
  *         email:
  *           type: string
  *           example: 'sample@gou.com'
- *         phone:
+ *         number:
  *           type: string
  *           example: '123123123'
  *         favorite:
@@ -457,4 +457,3 @@ module.exports = routerContacts;
  *       required:
  *         - favorite
  */
-
