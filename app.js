@@ -20,11 +20,11 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/user", routerAuth);
 app.use("/api/contact", routerContacts);
 
-app.use((req, res) => {
+app.use((_, res) => {
   res.status(404).json({ message: "not found" });
 });
 
-app.use((err, req, res, next) => {
+app.use((err, _, res) => {
   const { status = 500, message = "server error" } = err;
   res.status(status).json({ message });
 });

@@ -10,8 +10,8 @@ const options = {
         "**API documentation**<p>This project utilizes the following technology stack:</p><ul><li><strong>Node.js:</strong> JavaScript runtime environment on the server.</li><li><strong>Express.js:</strong> Framework for developing web applications on Node.js.</li><li><strong>MongoDB:</strong> NoSQL database.</li><li><strong>Mongoose:</strong> Library for working with MongoDB у Node.js.</li></ul> ",
     },
     contact: {
-      name: "Anastasiia",
-      url: "https://github.com/Anastasia-front/nodejs-first-rest-api",
+      name: "Anastasia",
+      url: "https://github.com/Anastasia-front/nodejs-phonebook-rest-api",
     },
     basePath: "/",
   },

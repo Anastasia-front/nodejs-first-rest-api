@@ -55,7 +55,7 @@ const checkRequiredFields = (name, email, phone, favorite) => {
 };
 
 const validateBody = (schema) => {
-  const func = (req, res, next) => {
+  const func = (req, _, next) => {
     const { error } = schema.validate(req.body);
     if (error) {
       console.log(error);
@@ -73,7 +73,7 @@ const validateBody = (schema) => {
 };
 
 const validateFavorite = (schema) => {
-  const func = (req, res, next) => {
+  const func = (req, _, next) => {
     const { error } = schema.validate(req.body);
     if (error) {
       next(HttpError(400, "missing field favorite"));
@@ -84,7 +84,7 @@ const validateFavorite = (schema) => {
   return func;
 };
 const validateSubscription = (schema) => {
-  const func = (req, res, next) => {
+  const func = (req, _, next) => {
     const { error } = schema.validate(req.body);
     if (error) {
       next(HttpError(400, error.message));
@@ -96,7 +96,7 @@ const validateSubscription = (schema) => {
 };
 
 const validateAuth = (schema) => {
-  const func = (req, res, next) => {
+  const func = (req, _, next) => {
     const { error } = schema.validate(req.body);
     if (error) {
       next(HttpError(400, error));
@@ -108,7 +108,7 @@ const validateAuth = (schema) => {
 };
 
 const validateEmail = (schema) => {
-  const func = (req, res, next) => {
+  const func = (req, _, next) => {
     const { error } = schema.validate(req.body);
     if (error) {
       next(HttpError(400, "missing required field email"));
